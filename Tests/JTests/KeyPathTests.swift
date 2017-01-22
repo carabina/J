@@ -7,7 +7,7 @@
 //
 
 import Foundation
-import Gloss
+import J
 import XCTest
 
 class KeyPathTests: XCTestCase {

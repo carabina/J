@@ -7,7 +7,7 @@
 //
 
 import Foundation
-import Gloss
+import J
 
 func ==(lhs: JSON, rhs: JSON ) -> Bool {
     return NSDictionary(dictionary: lhs).isEqual(to: rhs)

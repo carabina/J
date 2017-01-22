@@ -24,7 +24,7 @@
 //
 
 import Foundation
-import Gloss
+import J
 import XCTest
 
 class EncoderTests: XCTestCase {
@@ -249,24 +249,24 @@ class EncoderTests: XCTestCase {
     }
     
     func testEncodeEnumValue() {
-        let enumValue: TestModel.EnumValue? = TestModel.EnumValue.A
-        let result: JSON? = Encoder.encode(enumForKey: "enumValue")(enumValue)
+        let enumValue: TestModel.EnumValue = TestModel.EnumValue.A
+        let result: JSON = Encoder.encode(enumForKey: "enumValue")(enumValue)
         
-        XCTAssertTrue((result!["enumValue"] as! TestModel.EnumValue.RawValue == "A"), "Encode enum value should return correct value")
+        XCTAssertTrue((result["enumValue"] as! TestModel.EnumValue.RawValue == "A"), "Encode enum value should return correct value")
     }
     
     func testEncodeEnumArray() {
         let enumArray: [TestModel.EnumValue]? = [TestModel.EnumValue.A, TestModel.EnumValue.B, TestModel.EnumValue.C]
-        let result: JSON? = Encoder.encode(enumArrayForKey: "enumValueArray")(enumArray)
+        let result: JSON = Encoder.encode(enumArrayForKey: "enumValueArray")(enumArray)
         
-        XCTAssertTrue((result!["enumValueArray"] as! [TestModel.EnumValue.RawValue] == ["A", "B", "C"]), "Encode enum value array should return correct value")
+        XCTAssertTrue((result["enumValueArray"] as! [TestModel.EnumValue.RawValue] == ["A", "B", "C"]), "Encode enum value array should return correct value")
     }
     
     func testEncodeEnumArrayReturnsNilIfModelInvalid() {
         let invalidModel = ["1", "2", "3"]
-        let result: JSON? = Encoder.encode(key: "array")(invalidModel)
+        let result: JSON = Encoder.encode(key: "array")(invalidModel)
         
-        XCTAssertNil(result?["array"] as? [TestModel.EnumValue], "Encode enum array should return nil if model is invalid")
+        XCTAssertNil(result["array"] as? [TestModel.EnumValue], "Encode enum array should return nil if model is invalid")
     }
     
     func testEncodeDate() {

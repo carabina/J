@@ -68,6 +68,8 @@ public protocol Encodable {
     
 }
 
+public protocol JModel : Decodable, Encodable {}
+
 // MARK: - Global
 
 // MARK: DateFormatter

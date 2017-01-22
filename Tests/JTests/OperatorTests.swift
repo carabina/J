@@ -24,7 +24,7 @@
 //
 
 import Foundation
-import Gloss
+import J
 import XCTest
 
 class OperatorTests: XCTestCase {

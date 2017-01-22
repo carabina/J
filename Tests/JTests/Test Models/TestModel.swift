@@ -24,9 +24,9 @@
 //
 
 import Foundation
-import Gloss
+import J
 
-struct TestModel: Glossy {
+struct TestModel: JModel {
     
     let bool: Bool
     let boolArray: [Bool]?
@@ -64,57 +64,55 @@ struct TestModel: Glossy {
     let decimalArray: [Decimal]?
     
     enum EnumValue: String {
-        case A = "A"
-        case B = "B"
-        case C = "C"
+        case A = try "A"
+        case B = try "B"
+        case C = try "C"
     }
     
     // MARK: - Deserialization
     
-    init?(json: JSON) {
+    init(json:JSON) throws {
         guard
-            let bool: Bool = "bool" <~~ json
+            let bool: Bool = try "bool" <~~ json
             else { return nil }
         
         self.bool = bool
-        self.boolArray = "boolArray" <~~ json
-        self.integer = "integer" <~~ json
-        self.integerArray = "integerArray" <~~ json
-        self.float = "float" <~~ json
-        self.floatArray = "floatArray" <~~ json
-        self.double = "double" <~~ json
-        self.doubleArray = "doubleArray" <~~ json
-        self.dictionary = "dictionary" <~~ json
-        self.dictionaryWithArray = "dictionaryWithArray" <~~ json
-        self.string = "string" <~~ json
-        self.stringArray = "stringArray" <~~ json
-        self.nestedModel = "nestedModel" <~~ json
-        self.nestedModelArray = "nestedModelArray" <~~ json
-        self.enumValue = "enumValue" <~~ json
-        self.enumValueArray = "enumValueArray" <~~ json
+        self.boolArray = try "boolArray" <~~ json
+        self.integer = try "integer" <~~ json
+        self.integerArray = try "integerArray" <~~ json
+        self.float = try "float" <~~ json
+        self.floatArray = try "floatArray" <~~ json
+        self.double = try "double" <~~ json
+        self.doubleArray = try "doubleArray" <~~ json
+        self.dictionary = try "dictionary" <~~ json
+        self.dictionaryWithArray = try "dictionaryWithArray" <~~ json
+        self.string = try "string" <~~ json
+        self.stringArray = try "stringArray" <~~ json
+        self.nestedModel = try "nestedModel" <~~ json
+        self.nestedModelArray = try "nestedModelArray" <~~ json
+        self.enumValue = try "enumValue" <~~ json
+        self.enumValueArray = try "enumValueArray" <~~ json
         self.date = Decoder.decode(dateForKey: "date", dateFormatter: TestModel.dateFormatter)(json)
-        self.dateArray = Decoder.decode(dateArrayForKey: "dateArray", dateFormatter: TestModel.dateFormatter)(json)
         self.dateISO8601 = Decoder.decode(dateISO8601ForKey: "dateISO8601")(json)
-        self.dateISO8601Array = Decoder.decode(dateISO8601ArrayForKey: "dateISO8601Array")(json)
-        self.int32 = "int32" <~~ json
-        self.int32Array = "int32Array" <~~ json
-		self.uInt32 = "uInt32" <~~ json
-		self.uInt32Array = "uInt32Array" <~~ json
-        self.int64 = "int64" <~~ json
-        self.int64Array = "int64Array" <~~ json
-		self.uInt64 = "uInt64" <~~ json
-		self.uInt64Array = "uInt64Array" <~~ json
-        self.url = "url" <~~ json
-        self.urlArray = "urlArray" <~~ json
-        self.uuid = "uuid" <~~ json
-        self.uuidArray = "uuidArray" <~~ json
-        self.decimal = "decimal" <~~ json
-        self.decimalArray = "decimalArray" <~~ json
+        self.int32 = try "int32" <~~ json
+        self.int32Array = try "int32Array" <~~ json
+		self.uInt32 = try "uInt32" <~~ json
+		self.uInt32Array = try "uInt32Array" <~~ json
+        self.int64 = try "int64" <~~ json
+        self.int64Array = try "int64Array" <~~ json
+		self.uInt64 = try "uInt64" <~~ json
+		self.uInt64Array = try "uInt64Array" <~~ json
+        self.url = try "url" <~~ json
+        self.urlArray = try "urlArray" <~~ json
+        self.uuid = try "uuid" <~~ json
+        self.uuidArray = try "uuidArray" <~~ json
+        self.decimal = try "decimal" <~~ json
+        self.decimalArray = try "decimalArray" <~~ json
     }
 
     // MARK: - Serialization
 
-    func toJSON() -> JSON? {
+    func toJSON() -> JSON {
         return jsonify([
             "bool" ~~> self.bool,
             "boolArray" ~~> self.boolArray,
@@ -132,10 +130,10 @@ struct TestModel: Glossy {
             "nestedModelArray" ~~> self.nestedModelArray,
             "enumValue" ~~> self.enumValue,
             "enumValueArray" ~~> self.enumValueArray,
-            Encoder.encode(dateForKey: "date", dateFormatter: TestModel.dateFormatter)(self.date),
-            Encoder.encode(dateArrayForKey: "dateArray", dateFormatter: TestModel.dateFormatter)(self.dateArray),
-            Encoder.encode(dateISO8601ForKey: "dateISO8601")(self.dateISO8601),
-            Encoder.encode(dateISO8601ArrayForKey: "dateISO8601Array")(self.dateISO8601Array),
+            Encoder.encodeOptional(dateForKey: "date", dateFormatter: TestModel.dateFormatter)(self.date),
+            Encoder.encodeOptional(dateArrayForKey: "dateArray", dateFormatter: TestModel.dateFormatter)(self.dateArray),
+            Encoder.encodeOptional(dateISO8601ForKey: "dateISO8601")(self.dateISO8601),
+            Encoder.encodeOptional(dateISO8601ArrayForKey: "dateISO8601Array")(self.dateISO8601Array),
             "int32" ~~> self.int32,
             "int32Array" ~~> self.int32Array,
 			"uInt32" ~~> self.uInt32,

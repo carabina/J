@@ -7,19 +7,19 @@
 //
 
 import Foundation
-import Gloss
+import J
 
-struct TestNestedKeyPathModel: Glossy {
+struct TestNestedKeyPathModel: JModel {
     
     let keyPathModel: TestKeyPathModel?
     let flag: Bool
     
-    init?(json: JSON) {
-        self.keyPathModel = "keyPath" <~~ json
-        self.flag = "keyPath.args.flag" <~~ json ?? false
+    init(json: JSON) throws {
+        self.keyPathModel = try "keyPath" <~~ json
+        self.flag = try "keyPath.args.flag" <~~ json ?? false
     }
     
-    func toJSON() -> JSON? {
+    func toJSON() -> JSON {
         return jsonify([
             "keyPath" ~~> self.keyPathModel,
             "keyPath.args.flag" ~~> self.flag

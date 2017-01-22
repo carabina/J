@@ -24,27 +24,27 @@
 //
 
 import Foundation
-import Gloss
+import J
 
-struct TestNestedModel: Glossy {
+struct TestNestedModel: JModel {
     
-    let id: Int?
-    let name: String?
-    let uuid: UUID?
-    let url: URL?
+    let id: Int
+    let name: String
+    let uuid: UUID
+    let url: URL
     
     // MARK: - Deserialization
     
-    init(json: JSON) {
-        self.id = "id" <~~ json
-        self.name = "name" <~~ json
-        self.uuid = "uuid" <~~ json
-        self.url = "url" <~~ json
+    init(json: JSON) throws {
+        self.id = try "id" <~~ json
+        self.name = try "name" <~~ json
+        self.uuid = try "uuid" <~~ json
+        self.url = try "url" <~~ json
     }
     
     // MARK: - Serialization
     
-    func toJSON() -> JSON? {
+    func toJSON() -> JSON {
         return jsonify([
             "id" ~~> self.id,
             "name" ~~> self.name,

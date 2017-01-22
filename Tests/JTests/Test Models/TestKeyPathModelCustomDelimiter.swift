@@ -7,19 +7,19 @@
 //
 
 import Foundation
-import Gloss
+import J
 
-struct TestKeyPathModelCustomDelimiter: Glossy {
+struct TestKeyPathModelCustomDelimiter: JModel {
     
     let id: Int?
     let url: URL?
     
-    init?(json: JSON) {
+    init(json:JSON) throws {
         self.id = Decoder.decode(key: "nested*id", keyPathDelimiter: "*")(json)
         self.url = Decoder.decode(urlForKey: "nested*url", keyPathDelimiter: "*")(json)
     }
     
-    func toJSON() -> JSON? {
+    func toJSON() -> JSON {
         return jsonify([
             "nested*id" ~~> self.id,
             "nested*url" ~~> self.url

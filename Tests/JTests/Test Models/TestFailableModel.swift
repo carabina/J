@@ -23,23 +23,19 @@
 // THE SOFTWARE.
 //
 
-import Gloss
+import J
 
-struct TestFailableModel: Glossy {
+struct TestFailableModel: JModel {
     
     let identifier: String
     let value: Int
     
-    init?(json: JSON) {
-        guard let identifier: String = "identifier" <~~ json,
-            let value: Int = "value" <~~ json
-            else { return nil }
-        
-        self.identifier = identifier
-        self.value = value
+    init(json: JSON) throws {
+        self.identifier = try "identifier" <~~ json
+        self.value = try "value" <~~ json
     }
     
-    func toJSON() -> JSON? {
+    func toJSON() -> JSON {
         return [
             "identifier": self.identifier,
             "value": self.value,

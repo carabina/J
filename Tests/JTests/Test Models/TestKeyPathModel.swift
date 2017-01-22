@@ -7,21 +7,21 @@
 //
 
 import Foundation
-import Gloss
+import J
 
-struct TestKeyPathModel: Glossy {
+struct TestKeyPathModel: JModel {
     
-    let id: Int?
-    let name: String?
-    let url: URL?
+    let id: Int
+    let name: String
+    let url: URL
     
-    init?(json: JSON) {
+    init(json: JSON) throws {
         self.id = "id" <~~ json
         self.name = "args.name" <~~ json
         self.url = "args.url" <~~ json
     }
     
-    func toJSON() -> JSON? {
+    func toJSON() -> JSON {
         return jsonify([
             "id" ~~> self.id,
             "args.name" ~~> self.name,
