@@ -15,7 +15,7 @@
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "DCF300891BDCA3FF003FBF15"
-               BuildableName = "Gloss.framework"
+               BuildableName = "J.framework"
                BlueprintName = "J MacOS"
                ReferencedContainer = "container:J.xcodeproj">
             </BuildableReference>
@@ -46,7 +46,7 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "DCF300891BDCA3FF003FBF15"
-            BuildableName = "Gloss.framework"
+            BuildableName = "J.framework"
             BlueprintName = "J MacOS"
             ReferencedContainer = "container:J.xcodeproj">
          </BuildableReference>
@@ -64,7 +64,7 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "DCF300891BDCA3FF003FBF15"
-            BuildableName = "Gloss.framework"
+            BuildableName = "J.framework"
             BlueprintName = "J MacOS"
             ReferencedContainer = "container:J.xcodeproj">
          </BuildableReference>

@@ -64,18 +64,15 @@ struct TestModel: JModel {
     let decimalArray: [Decimal]?
     
     enum EnumValue: String {
-        case A = try "A"
-        case B = try "B"
-        case C = try "C"
+        case A = "A"
+        case B = "B"
+        case C = "C"
     }
     
     // MARK: - Deserialization
     
     init(json:JSON) throws {
-        guard
-            let bool: Bool = try "bool" <~~ json
-            else { return nil }
-        
+        let bool: Bool = try "bool" <~~ json
         self.bool = bool
         self.boolArray = try "boolArray" <~~ json
         self.integer = try "integer" <~~ json
@@ -92,8 +89,10 @@ struct TestModel: JModel {
         self.nestedModelArray = try "nestedModelArray" <~~ json
         self.enumValue = try "enumValue" <~~ json
         self.enumValueArray = try "enumValueArray" <~~ json
-        self.date = Decoder.decode(dateForKey: "date", dateFormatter: TestModel.dateFormatter)(json)
-        self.dateISO8601 = Decoder.decode(dateISO8601ForKey: "dateISO8601")(json)
+        self.date = try Decoder.decode(dateForKey: "date", dateFormatter: TestModel.dateFormatter)(json)
+        self.dateArray = try Decoder.decode(dateArrayForKey:"dateArray", dateFormatter:TestModel.dateFormatter)(json)
+        self.dateISO8601 = try Decoder.decode(dateISO8601ForKey: "dateISO8601")(json)
+        self.dateISO8601Array = try Decoder.decode(dateISO8601ArrayForKey: "dateISO8601Array")(json)
         self.int32 = try "int32" <~~ json
         self.int32Array = try "int32Array" <~~ json
 		self.uInt32 = try "uInt32" <~~ json
@@ -114,7 +113,7 @@ struct TestModel: JModel {
 
     func toJSON() -> JSON {
         return jsonify([
-            "bool" ~~> self.bool,
+            "bool" ~~? self.bool,
             "boolArray" ~~> self.boolArray,
             "integer" ~~> self.integer,
             "integerArray" ~~> self.integerArray,
@@ -134,20 +133,20 @@ struct TestModel: JModel {
             Encoder.encodeOptional(dateArrayForKey: "dateArray", dateFormatter: TestModel.dateFormatter)(self.dateArray),
             Encoder.encodeOptional(dateISO8601ForKey: "dateISO8601")(self.dateISO8601),
             Encoder.encodeOptional(dateISO8601ArrayForKey: "dateISO8601Array")(self.dateISO8601Array),
-            "int32" ~~> self.int32,
-            "int32Array" ~~> self.int32Array,
-			"uInt32" ~~> self.uInt32,
-			"uInt32Array" ~~> self.uInt32Array,
-			"int64" ~~> self.int64,
-            "int64Array" ~~> self.int64Array,
-			"uInt64" ~~> self.uInt64,
-			"uInt64Array" ~~> self.uInt64Array,
-			"url" ~~> self.url,
+            "int32" ~~? self.int32,
+            "int32Array" ~~? self.int32Array,
+			"uInt32" ~~? self.uInt32,
+			"uInt32Array" ~~? self.uInt32Array,
+			"int64" ~~? self.int64,
+            "int64Array" ~~? self.int64Array,
+			"uInt64" ~~? self.uInt64,
+			"uInt64Array" ~~? self.uInt64Array,
+			"url" ~~? self.url,
             "urlArray" ~~> self.urlArray,
-            "uuid" ~~> self.uuid,
+            "uuid" ~~? self.uuid,
             "uuidArray" ~~> self.uuidArray,
-            "decimal" ~~> self.decimal,
-            "decimalArray" ~~> self.decimalArray
+            "decimal" ~~? self.decimal,
+            "decimalArray" ~~? self.decimalArray
             ])
     }
     

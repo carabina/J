@@ -15,8 +15,8 @@ struct TestKeyPathModelCustomDelimiter: JModel {
     let url: URL?
     
     init(json:JSON) throws {
-        self.id = Decoder.decode(key: "nested*id", keyPathDelimiter: "*")(json)
-        self.url = Decoder.decode(urlForKey: "nested*url", keyPathDelimiter: "*")(json)
+        self.id = try Decoder.decode(key: "nested*id", keyPathDelimiter: "*")(json)
+        self.url = try Decoder.decode(urlForKey: "nested*url", keyPathDelimiter: "*")(json)
     }
     
     func toJSON() -> JSON {

@@ -105,8 +105,8 @@ class GlossTests: XCTestCase {
             "uuid" : "964F2FE2-0F78-4C2D-A291-03058C0B98AB"
         ]
         
-        let model = TestModel(json: testModelsJSON!)
-        testModels = [model!, model!]
+        let model = try! TestModel(json: testModelsJSON!)
+        testModels = [model, model]
     }
     
     override func tearDown() {
@@ -118,13 +118,13 @@ class GlossTests: XCTestCase {
     }
     
     func testDateFormatterISO8601HasCorrectLocale() {
-        let dateFormatterISO8601 = GlossDateFormatterISO8601 as! DateFormatter
+        let dateFormatterISO8601 = GlossDateFormatterISO8601
         
         XCTAssertTrue(dateFormatterISO8601.locale.identifier == "en_US_POSIX", "Date formatter ISO8601 should have correct locale.")
     }
     
     func testDateFormatterISO8601HasCorrectDateFormat() {
-        let dateFormatterISO8601 = GlossDateFormatterISO8601 as! DateFormatter
+        let dateFormatterISO8601 = GlossDateFormatterISO8601
         
         XCTAssertTrue(dateFormatterISO8601.dateFormat == "yyyy-MM-dd'T'HH:mm:ssZZZZZ", "Date formatter ISO8601 should have correct date format.")
     }
@@ -135,7 +135,7 @@ class GlossTests: XCTestCase {
             return
         }
 
-        let dateFormatterISO8601 = GlossDateFormatterISO8601 as! DateFormatter
+        let dateFormatterISO8601 = GlossDateFormatterISO8601
 
         XCTAssertTrue(dateFormatterISO8601.calendar.identifier == Calendar.Identifier.gregorian, "Date formatter ISO8601 should force use of Gregorian calendar.")
          XCTAssertTrue(dateFormatterISO8601.calendar.timeZone.abbreviation() == "GMT", "Date formatter ISO8601 Gregorian calendar should use GMT timezone.")
@@ -148,19 +148,19 @@ class GlossTests: XCTestCase {
         
         let result = jsonify([jsonDict1, jsonDict2, jsonDict3])
         
-        XCTAssertTrue((result!.count == 6), "jsonify should turn array of JSON dictionaries to a single JSON dictionary")
-        XCTAssertTrue((result!["a"] as! Bool == true), "jsonify should turn array of JSON dictionaries to a single JSON dictionary")
-        XCTAssertTrue((result!["b"] as! Bool == false), "jsonify should turn array of JSON dictionaries to a single JSON dictionary")
-        XCTAssertTrue((result!["d"] as! String == "e"), "jsonify should turn array of JSON dictionaries to a single JSON dictionary")
-        XCTAssertTrue((result!["f"] as! String == "g"), "jsonify should turn array of JSON dictionaries to a single JSON dictionary")
-        XCTAssertTrue((result!["j"] as! Int == 1), "jsonify should turn array of JSON dictionaries to a single JSON dictionary")
-        XCTAssertTrue((result!["k"] as! Int == 2), "jsonify should turn array of JSON dictionaries to a single JSON dictionary")
+        XCTAssertTrue((result.count == 6), "jsonify should turn array of JSON dictionaries to a single JSON dictionary")
+        XCTAssertTrue((result["a"] as! Bool == true), "jsonify should turn array of JSON dictionaries to a single JSON dictionary")
+        XCTAssertTrue((result["b"] as! Bool == false), "jsonify should turn array of JSON dictionaries to a single JSON dictionary")
+        XCTAssertTrue((result["d"] as! String == "e"), "jsonify should turn array of JSON dictionaries to a single JSON dictionary")
+        XCTAssertTrue((result["f"] as! String == "g"), "jsonify should turn array of JSON dictionaries to a single JSON dictionary")
+        XCTAssertTrue((result["j"] as! Int == 1), "jsonify should turn array of JSON dictionaries to a single JSON dictionary")
+        XCTAssertTrue((result["k"] as! Int == 2), "jsonify should turn array of JSON dictionaries to a single JSON dictionary")
     }
     
     func testModelsFromJSONArrayProducesValidModels() {
-        let result = [TestModel].from(jsonArray: testJSONArray!)
-        let model1: TestModel = result![0]
-        let model2: TestModel = result![1]
+        let result = try! [TestModel].from(jsonArray: testJSONArray!)
+        let model1: TestModel = result[0]
+        let model2: TestModel = result[1]
         
         XCTAssertTrue((model1.bool == true), "Model created from JSON should have correct property values")
         XCTAssertTrue((model1.boolArray! == [true, false, true]), "Model created from JSON should have correct property values")
@@ -221,15 +221,19 @@ class GlossTests: XCTestCase {
     func testModelsFromJSONArrayReturnsNilIfDecodingFails() {
         testJSONArray![0].removeValue(forKey: "bool")
         
-        let result = [TestModel].from(jsonArray: testJSONArray!)
-
-        XCTAssertNil(result, "Model array from JSON array should be nil is any decoding fails.")
+        var erred = false
+        do {
+            let _ = try [TestModel].from(jsonArray: testJSONArray!)
+        } catch _ {
+            erred = true
+        }
+        XCTAssert(erred, "Model array from JSON array should be nil is any decoding fails.")
     }
     
     func testJSONArrayFromModelsProducesValidJSON() {
         let result = testModels!.toJSONArray()
-        let json1 = result![0]
-        let json2 = result![1]
+        let json1 = result[0]
+        let json2 = result[1]
         
         XCTAssertTrue((json1["bool"] as! Bool == true), "JSON created from model should have correct values")
         XCTAssertTrue((json1["boolArray"] as! [Bool] == [true, false, true]), "JSON created from model should have correct values")
@@ -318,9 +322,15 @@ class GlossTests: XCTestCase {
         invalidJSON.removeValue(forKey: "bool")
         var jsonArray = testJSONArray!
         jsonArray.append(invalidJSON)
-        let result = [TestModel].from(jsonArray: jsonArray)
-
-        XCTAssertNil(result, "JSON array from model array should be nil is any encoding fails.")
+        var err:JParseError? = nil
+        do {
+            _ = try [TestModel].from(jsonArray: jsonArray)
+        } catch let e as JParseError {
+            err = e
+        } catch _ {
+            
+        }
+        XCTAssertNotNil(err, "JSON array from model array should be nil is any encoding fails.")
     }
     
     func testJsonifyTurnsJSONOptionalArrayToSingleJSONOptional() {
@@ -328,26 +338,26 @@ class GlossTests: XCTestCase {
         let json2 = ["test2" : 2 ]
         let result = jsonify([json1 as Optional<Dictionary<String, Any>>, json2 as Optional<Dictionary<String, Any>>])
         
-        XCTAssertTrue(result!["test1"] as! Int == 1, "Jsonify should turn JSON optional array to single JSON optional")
-        XCTAssertTrue(result!["test2"] as! Int == 2, "Jsonify should turn JSON optional array to single JSON optional")
+        XCTAssertTrue(result["test1"] as! Int == 1, "Jsonify should turn JSON optional array to single JSON optional")
+        XCTAssertTrue(result["test2"] as! Int == 2, "Jsonify should turn JSON optional array to single JSON optional")
     }
     
     func testJsonifyReturnsEmptyJSONWhenGivenEmptyArray() {
         let result = jsonify([])
         
-        XCTAssertTrue(result!.isEmpty, "Jsonify should return empty JSON when given an empty array")
+        XCTAssertTrue(result.isEmpty, "Jsonify should return empty JSON when given an empty array")
     }
     
     func testModelFromJSONRawData() {
         let data = try! JSONSerialization.data(withJSONObject: testModelsJSON!, options: [])
-        let model = TestModel(data: data)
+        let model = try! TestModel(data: data)
         
         XCTAssertNotNil(model, "Model from Data should not be nil.")
     }
     
     func testModelArrayFromJSONArrayRawData() {
         let data = try! JSONSerialization.data(withJSONObject: testJSONArray!, options: [])
-        let modelArray = [TestModel].from(data: data)
+        let modelArray = try! [TestModel].from(data: data)
         
         XCTAssertNotNil(modelArray, "Model array from Data should not be nil.")
     }

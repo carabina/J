@@ -83,8 +83,8 @@ class EncoderTests: XCTestCase {
     override func setUp() {
         super.setUp()
         
-        testNestedModel1 = TestNestedModel(json: [ "id" : 1, "name" : "nestedModel1"])
-        testNestedModel2 = TestNestedModel(json: ["id" : 2, "name" : "nestedModel2"])
+        testNestedModel1 = try! TestNestedModel(json: [ "id" : 1, "name" : "nestedModel1"])
+        testNestedModel2 = try! TestNestedModel(json: ["id" : 2, "name" : "nestedModel2"])
     }
     
     override func tearDown() {
@@ -227,7 +227,7 @@ class EncoderTests: XCTestCase {
     }
     
     func testEncodeNestedModel() {
-        let result: JSON? = Encoder.encode(encodableForKey: "nestedModel")(testNestedModel1)
+        let result: JSON? = Encoder.encode(encodableForKey: "nestedModel")(testNestedModel1!)
         let modelJSON: JSON = result!["nestedModel"] as! JSON
         
         XCTAssertTrue((modelJSON["id"] as! Int == 1), "Encode nested model should return correct value")
@@ -256,7 +256,7 @@ class EncoderTests: XCTestCase {
     }
     
     func testEncodeEnumArray() {
-        let enumArray: [TestModel.EnumValue]? = [TestModel.EnumValue.A, TestModel.EnumValue.B, TestModel.EnumValue.C]
+        let enumArray: [TestModel.EnumValue] = [TestModel.EnumValue.A, TestModel.EnumValue.B, TestModel.EnumValue.C]
         let result: JSON = Encoder.encode(enumArrayForKey: "enumValueArray")(enumArray)
         
         XCTAssertTrue((result["enumValueArray"] as! [TestModel.EnumValue.RawValue] == ["A", "B", "C"]), "Encode enum value array should return correct value")
@@ -270,25 +270,25 @@ class EncoderTests: XCTestCase {
     }
     
     func testEncodeDate() {
-        let date: Date? = TestModel.dateFormatter.date(from: "2015-08-16T20:51:46.600Z")
-        let result: JSON? = Encoder.encode(dateForKey: "date", dateFormatter: TestModel.dateFormatter)(date)
+        let date: Date = TestModel.dateFormatter.date(from: "2015-08-16T20:51:46.600Z")!
+        let result: JSON = Encoder.encode(dateForKey: "date", dateFormatter: TestModel.dateFormatter)(date)
         
-        XCTAssertTrue(result!["date"] as! String == "2015-08-16T20:51:46.600Z", "Encode Date should return correct value")
+        XCTAssertTrue(result["date"] as! String == "2015-08-16T20:51:46.600Z", "Encode Date should return correct value")
     }
     
     func testEncodeDateArray() {
-        let date: Date? = TestModel.dateFormatter.date(from: "2015-08-16T20:51:46.600Z")
-        let dateArray: [Date]? = [date!, date!]
-        let result: JSON? = Encoder.encode(dateArrayForKey: "dateArray", dateFormatter: TestModel.dateFormatter)(dateArray)
+        let date: Date = TestModel.dateFormatter.date(from: "2015-08-16T20:51:46.600Z")!
+        let dateArray: [Date] = [date, date]
+        let result: JSON = Encoder.encode(dateArrayForKey: "dateArray", dateFormatter: TestModel.dateFormatter)(dateArray)
         
-        XCTAssertTrue(result!["dateArray"] as! [String] == ["2015-08-16T20:51:46.600Z", "2015-08-16T20:51:46.600Z"], "Encode Date array should return correct value")
+        XCTAssertTrue(result["dateArray"] as! [String] == ["2015-08-16T20:51:46.600Z", "2015-08-16T20:51:46.600Z"], "Encode Date array should return correct value")
     }
     
     func testEncodeDateArrayReturnsNilIfModelInvalid() {
         let invalidModel = [Date(timeIntervalSince1970: 1), Date(timeIntervalSince1970: 2), Date(timeIntervalSince1970: 3)]
-        let result: JSON? = Encoder.encode(dateArrayForKey: "array", dateFormatter: TestModel.dateFormatter)(invalidModel)
+        let result: JSON = Encoder.encode(dateArrayForKey: "array", dateFormatter: TestModel.dateFormatter)(invalidModel)
         
-        XCTAssertNil(result?["array"] as? [Date], "Encode date array should return nil if model is invalid")
+        XCTAssertNil(result["array"] as? [Date], "Encode date array should return nil if model is invalid")
     }
     
     func testEncodeDateISO8601() {
@@ -329,73 +329,73 @@ class EncoderTests: XCTestCase {
     }
     
     func testEncodeInt32() {
-        let int32: Int32? =  100000000
-        let result: JSON? = Encoder.encode(int32ForKey: "int32")(int32)
+        let int32: Int32 =  100000000
+        let result: JSON = Encoder.encode(int32ForKey: "int32")(int32)
         
-        XCTAssertTrue(((result!["int32"] as! NSNumber).int32Value == 100000000), "Encode Int32 should return correct value")
+        XCTAssertTrue(((result["int32"] as! NSNumber).int32Value == 100000000), "Encode Int32 should return correct value")
     }
     
     func testEncodeInt32Array() {
-        let int32Array: [Int32]? =  [100000000, -2147483648, 2147483647]
-        let result: JSON? = Encoder.encode(int32ArrayForKey: "int32Array")(int32Array)
+        let int32Array: [Int32] =  [100000000, -2147483648, 2147483647]
+        let result: JSON = Encoder.encode(int32ArrayForKey: "int32Array")(int32Array)
         
-        XCTAssertTrue(((result!["int32Array"] as! [NSNumber]).map { $0.int32Value } == [100000000, -2147483648, 2147483647]), "Encode Int32 array should return correct value")
+        XCTAssertTrue(((result["int32Array"] as! [NSNumber]).map { $0.int32Value } == [100000000, -2147483648, 2147483647]), "Encode Int32 array should return correct value")
     }
 
 	func testEncodeUInt32() {
-		let uInt32: UInt32? =  4294967295
-		let result: JSON? = Encoder.encode(uint32ForKey: "uInt32")(uInt32)
+		let uInt32: UInt32 =  4294967295
+		let result: JSON = Encoder.encode(uint32ForKey: "uInt32")(uInt32)
 
-		XCTAssertTrue(((result!["uInt32"] as! NSNumber).uint32Value == 4294967295), "Encode UInt32 should return correct value")
+		XCTAssertTrue(((result["uInt32"] as! NSNumber).uint32Value == 4294967295), "Encode UInt32 should return correct value")
 	}
 
 	func testEncodeUInt32Array() {
-		let uInt32Array: [UInt32]? =  [100000000, 2147483648, 4294967295]
-		let result: JSON? = Encoder.encode(uint32ArrayForKey: "uInt32Array")(uInt32Array)
+		let uInt32Array: [UInt32] =  [100000000, 2147483648, 4294967295]
+		let result: JSON = Encoder.encode(uint32ArrayForKey: "uInt32Array")(uInt32Array)
 
-		XCTAssertTrue(((result!["uInt32Array"] as! [NSNumber]).map { $0.uint32Value } == [100000000, 2147483648, 4294967295]), "Encode UInt32 array should return correct value")
+		XCTAssertTrue(((result["uInt32Array"] as! [NSNumber]).map { $0.uint32Value } == [100000000, 2147483648, 4294967295]), "Encode UInt32 array should return correct value")
 	}
 
     func testEncodeInt64() {
-        let int64: Int64? =  300000000
-        let result: JSON? = Encoder.encode(int64ForKey: "int64")(int64)
+        let int64: Int64 =  300000000
+        let result: JSON = Encoder.encode(int64ForKey: "int64")(int64)
         
-        XCTAssertTrue(((result!["int64"] as! NSNumber).int64Value == 300000000), "Encode Int64 should return correct value")
+        XCTAssertTrue(((result["int64"] as! NSNumber).int64Value == 300000000), "Encode Int64 should return correct value")
     }
     
     func testEncodeInt64Array() {
-        let int64Array: [Int64]? =  [300000000, -9223372036854775808, 9223372036854775807]
-        let result: JSON? = Encoder.encode(int64ArrayForKey: "int64Array")(int64Array)
+        let int64Array: [Int64] =  [300000000, -9223372036854775808, 9223372036854775807]
+        let result: JSON = Encoder.encode(int64ArrayForKey: "int64Array")(int64Array)
         
-        XCTAssertTrue(((result!["int64Array"] as! [NSNumber]).map { $0.int64Value } == [300000000, -9223372036854775808, 9223372036854775807]), "Encode Int64 array should return correct value")
+        XCTAssertTrue(((result["int64Array"] as! [NSNumber]).map { $0.int64Value } == [300000000, -9223372036854775808, 9223372036854775807]), "Encode Int64 array should return correct value")
     }
 
 	func testEncodeUInt64() {
-		let uInt64: UInt64? =  18446744073709551615
-        let result: JSON? = Encoder.encode(uint64ForKey: "uInt64")(uInt64)
+		let uInt64: UInt64 =  18446744073709551615
+        let result: JSON = Encoder.encode(uint64ForKey: "uInt64")(uInt64)
 
-		XCTAssertTrue(((result!["uInt64"] as! NSNumber).uint64Value == 18446744073709551615), "Encode UInt64 should return correct value")
+		XCTAssertTrue(((result["uInt64"] as! NSNumber).uint64Value == 18446744073709551615), "Encode UInt64 should return correct value")
 	}
 
 	func testEncodeUInt64Array() {
-		let uInt64Array: [UInt64]? =  [300000000, 9223372036854775808, 18446744073709551615]
-        let result: JSON? = Encoder.encode(uint64ArrayForKey: "uInt64Array")(uInt64Array)
+		let uInt64Array: [UInt64] =  [300000000, 9223372036854775808, 18446744073709551615]
+        let result: JSON = Encoder.encode(uint64ArrayForKey: "uInt64Array")(uInt64Array)
 
-		XCTAssertTrue(((result!["uInt64Array"] as! [NSNumber]).map { $0.uint64Value } == [300000000, 9223372036854775808, 18446744073709551615]), "Encode UInt64 array should return correct value")
+		XCTAssertTrue(((result["uInt64Array"] as! [NSNumber]).map { $0.uint64Value } == [300000000, 9223372036854775808, 18446744073709551615]), "Encode UInt64 array should return correct value")
 	}
 
     func testEncodeURL() {
-        let url: URL? = URL(string: "http://github.com")
-        let result: JSON? = Encoder.encode(urlForKey: "url")(url)
+        let url: URL = URL(string: "http://github.com")!
+        let result: JSON = Encoder.encode(urlForKey: "url")(url)
         
-        XCTAssertTrue((result!["url"] as! String == "http://github.com"), "Encode URL should return correct value")
+        XCTAssertTrue((result["url"] as! String == "http://github.com"), "Encode URL should return correct value")
     }
     
     func testEncodeURLArray() {
-        let urls: [URL]? = [URL(string: "http://github.com")!, URL(string: "http://github.com")!]
-        let result: JSON? = Encoder.encode(arrayForKey: "urlArray")(urls)
+        let urls: [URL] = [URL(string: "http://github.com")!, URL(string: "http://github.com")!]
+        let result: JSON = Encoder.encode(arrayForKey: "urlArray")(urls)
         
-        let test = result!["urlArray"] as! [URL]
+        let test = result["urlArray"] as! [URL]
         
         XCTAssertTrue(test.map { url in url.absoluteString } == ["http://github.com", "http://github.com"], "Encode URL array should return correct value")
     }
@@ -408,17 +408,17 @@ class EncoderTests: XCTestCase {
     }
 
     func testEncodeUUID() {
-        let uuid: UUID? = UUID(uuidString: "5D8C7570-F700-4CDD-A6F5-A2DBE0D59647")
-        let result: JSON? = Encoder.encode(uuidForKey: "uuid")(uuid)
+        let uuid: UUID = UUID(uuidString: "5D8C7570-F700-4CDD-A6F5-A2DBE0D59647")!
+        let result: JSON = Encoder.encode(uuidForKey: "uuid")(uuid)
 
-        XCTAssertTrue((result!["uuid"] as! String == "5D8C7570-F700-4CDD-A6F5-A2DBE0D59647"), "Encode UUID should return correct value")
+        XCTAssertTrue((result["uuid"] as! String == "5D8C7570-F700-4CDD-A6F5-A2DBE0D59647"), "Encode UUID should return correct value")
     }
 
     func testEncodeUUIDArray() {
-        let uuids: [UUID]? = [UUID(uuidString: "CC7DA36D-51E5-42A1-BCA3-E9D8E567B051")!, UUID(uuidString: "21F300CB-47F5-4DDF-8C76-9C8D0241FB96")!]
-        let result: JSON? = Encoder.encode(arrayForKey: "uuidArray")(uuids)
+        let uuids: [UUID] = [UUID(uuidString: "CC7DA36D-51E5-42A1-BCA3-E9D8E567B051")!, UUID(uuidString: "21F300CB-47F5-4DDF-8C76-9C8D0241FB96")!]
+        let result: JSON = Encoder.encode(arrayForKey: "uuidArray")(uuids)
 
-        let test = result!["uuidArray"] as! [UUID]
+        let test = result["uuidArray"] as! [UUID]
 
         XCTAssertTrue(test.map { uuid in uuid.uuidString } == ["CC7DA36D-51E5-42A1-BCA3-E9D8E567B051", "21F300CB-47F5-4DDF-8C76-9C8D0241FB96"], "Encode UUID array should return correct value")
     }
@@ -431,16 +431,16 @@ class EncoderTests: XCTestCase {
     }
     
     func testEncodeDecimal() {
-        let decimal: Decimal? =  3.14159
-        let result: JSON? = Encoder.encode(decimalForKey: "decimal")(decimal)
+        let decimal: Decimal =  3.14159
+        let result: JSON = Encoder.encode(decimalForKey: "decimal")(decimal)
         
-        XCTAssertTrue(((result!["decimal"] as! NSNumber).decimalValue == 3.14159), "Encode Decimal should return correct value")
+        XCTAssertTrue(((result["decimal"] as! NSNumber).decimalValue == 3.14159), "Encode Decimal should return correct value")
     }
     
     func testEncodeDecimalArray() {
-        let decimalArray: [Decimal]? =  [3.14159, 1.618, -2.7182]
-        let result: JSON? = Encoder.encode(decimalArrayForKey: "decimalArray")(decimalArray)
+        let decimalArray: [Decimal] =  [3.14159, 1.618, -2.7182]
+        let result: JSON = Encoder.encode(decimalArrayForKey: "decimalArray")(decimalArray)
         
-        XCTAssertTrue(((result!["decimalArray"] as! [NSNumber]).map { $0.decimalValue } == [3.14159, 1.618, -2.7182]), "Encode Decimal array should return correct value")
+        XCTAssertTrue(((result["decimalArray"] as! [NSNumber]).map { $0.decimalValue } == [3.14159, 1.618, -2.7182]), "Encode Decimal array should return correct value")
     }
 }

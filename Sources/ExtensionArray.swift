@@ -71,7 +71,7 @@ public extension Array where Element: Decodable {
     static func from(data: Data, serializer: JSONSerializer = JJSONSerializer(), options: JSONSerialization.ReadingOptions = .mutableContainers) throws -> [Element] {
         let jsonValues = try JSONSerialization.jsonObject(with: data, options: .mutableContainers)
         guard let jsonArray = jsonValues as? [JSON] else {
-            throw ParseError.incorrectType("", jsonValues, [JSON].self)
+            throw JParseError.incorrectType("", jsonValues, [JSON].self)
         }
             
         let models = try [Element].from(jsonArray: jsonArray)

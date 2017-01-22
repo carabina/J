@@ -44,7 +44,7 @@ public struct Decoder {
             if let value:T = try decodeOptional(key: key, keyPathDelimiter: keyPathDelimiter)(json) {
                 return value
             } else {
-                throw ParseError.missingField(key, json)
+                throw JParseError.missingField(key, json)
             }
         }
     }
@@ -56,7 +56,7 @@ public struct Decoder {
                 if let typedValue = value as? T {
                     return typedValue
                 } else {
-                    throw ParseError.incorrectType(key, json, T.self)
+                    throw JParseError.incorrectType(key, json, T.self)
                 }
             } else {
                 return nil
@@ -78,7 +78,7 @@ public struct Decoder {
             if let value = try decodeOptional(dateForKey: key, dateFormatter: dateFormatter, keyPathDelimiter: keyPathDelimiter)(json) {
                 return value
             } else {
-                throw ParseError.missingField(key, json)
+                throw JParseError.missingField(key, json)
             }
         }
     }
@@ -91,10 +91,43 @@ public struct Decoder {
                     if let date = dateFormatter.date(from: typedValue) {
                         return date
                     } else {
-                        throw ParseError.badValue(key, json)
+                        throw JParseError.badValue(key, json)
                     }
                 } else {
-                    throw ParseError.incorrectType(key, json, String.self)
+                    throw JParseError.incorrectType(key, json, String.self)
+                }
+            } else {
+                return nil
+            }
+        }
+    }
+    
+    public static func decode(dateArrayForKey key: String, dateFormatter: DateFormatter, keyPathDelimiter: String = GlossKeyPathDelimiter) -> (JSON) throws -> [Date] {
+        return {
+            json in
+            if let value = try decodeOptional(dateArrayForKey: key, dateFormatter: dateFormatter, keyPathDelimiter: keyPathDelimiter)(json) {
+                return value
+            } else {
+                throw JParseError.missingField(key, json)
+            }
+        }
+    }
+    
+    public static func decodeOptional(dateArrayForKey key: String, dateFormatter: DateFormatter, keyPathDelimiter: String = GlossKeyPathDelimiter) -> (JSON) throws -> [Date]? {
+        return {
+            json in
+            if let value = json.valueForKeyPath(keyPath: key, withDelimiter: keyPathDelimiter) {
+                if let typedValue = value as? [String] {
+                    var dates = [Date]()
+                    for string in typedValue {
+                        guard let date = dateFormatter.date(from: string) else {
+                            throw JParseError.badValue(key, json)
+                        }
+                        dates.append(date)
+                    }
+                    return dates
+                } else {
+                    throw JParseError.incorrectType(key, json, [String].self)
                 }
             } else {
                 return nil
@@ -117,6 +150,14 @@ public struct Decoder {
         return Decoder.decodeOptional(dateForKey: key, dateFormatter: GlossDateFormatterISO8601, keyPathDelimiter: keyPathDelimiter)
     }
     
+    public static func decode(dateISO8601ArrayForKey key:String, keyPathDelimiter: String = GlossKeyPathDelimiter) -> (JSON) throws -> [Date] {
+        return Decoder.decode(dateArrayForKey: key, dateFormatter: GlossDateFormatterISO8601, keyPathDelimiter: keyPathDelimiter)
+    }
+    
+    public static func decodeOptional(dateISO8601ArrayForKey key:String, keyPathDelimiter: String = GlossKeyPathDelimiter) -> (JSON) throws -> [Date]? {
+        return Decoder.decodeOptional(dateArrayForKey: key, dateFormatter: GlossDateFormatterISO8601, keyPathDelimiter: keyPathDelimiter)
+    }
+    
     /**
      Decodes JSON to a Decodable object.
      
@@ -132,7 +173,7 @@ public struct Decoder {
                 return value
             }
             
-            throw ParseError.missingField(key, json)
+            throw JParseError.missingField(key, json)
             
         }
     }
@@ -144,7 +185,7 @@ public struct Decoder {
                 if let subJSON = value as? JSON {
                     return try T(json: subJSON)
                 } else {
-                    throw ParseError.incorrectType(key, json, JSON.self)
+                    throw JParseError.incorrectType(key, json, JSON.self)
                 }
             } else {
                 return nil
@@ -167,7 +208,7 @@ public struct Decoder {
             if let value:[T] = try decodeOptional(decodableArrayForKey: key, keyPathDelimiter: keyPathDelimiter)(json) {
                 return value
             }
-            throw ParseError.missingField(key, json)
+            throw JParseError.missingField(key, json)
         }
     }
     
@@ -183,10 +224,10 @@ public struct Decoder {
                     }
                     return models
                 } else {
-                    throw ParseError.incorrectType(key, json, [JSON].self)
+                    throw JParseError.incorrectType(key, json, [JSON].self)
                 }
             }
-            throw ParseError.missingField(key, json)
+            throw JParseError.missingField(key, json)
         }
     }
     
@@ -203,7 +244,7 @@ public struct Decoder {
             if let val:[String:T] = try decodeOptional(decodableDictionaryForKey:key, keyPathDelimiter: keyPathDelimiter)(json) {
                 return val
             }
-            throw ParseError.missingField(key, json)
+            throw JParseError.missingField(key, json)
         }
     }
     
@@ -214,7 +255,7 @@ public struct Decoder {
                 return nil
             }
             guard let dictionary = value as? [String : JSON] else {
-                throw ParseError.incorrectType(key, json, [String:JSON].self)
+                throw JParseError.incorrectType(key, json, [String:JSON].self)
             }
             
             return try dictionary.flatMap {
@@ -240,7 +281,7 @@ public struct Decoder {
             if let value:[String:[T]] = try decodeOptional(decodableDictionaryForKey:key, keyPathDelimiter:keyPathDelimiter)(json) {
                 return value
             }
-            throw ParseError.missingField(key, json)
+            throw JParseError.missingField(key, json)
         }
     }
     
@@ -251,7 +292,7 @@ public struct Decoder {
                 return nil
             }
             guard let dictionary = value as? [String:[JSON]] else {
-                throw ParseError.incorrectType(key, json, [String:[JSON]].self)
+                throw JParseError.incorrectType(key, json, [String:[JSON]].self)
             }
             
             return try dictionary.flatMap {
@@ -276,7 +317,7 @@ public struct Decoder {
             if let value:T = try decodeOptional(enumForKey:key, keyPathDelimiter:keyPathDelimiter)(json) {
                 return value
             }
-            throw ParseError.missingField(key, json)
+            throw JParseError.missingField(key, json)
         }
     }
     
@@ -288,10 +329,10 @@ public struct Decoder {
                 return nil
             }
             guard let rawValue = value as? T.RawValue else {
-                throw ParseError.incorrectType(key, json, T.RawValue.self)
+                throw JParseError.incorrectType(key, json, T.RawValue.self)
             }
             guard let enumValue = T(rawValue: rawValue) else {
-                throw ParseError.badValue(key, json)
+                throw JParseError.badValue(key, json)
             }
             
             return enumValue
@@ -312,7 +353,7 @@ public struct Decoder {
             if let enumValues:[T] = try decodeOptional(enumArrayForKey:key, keyPathDelimiter:keyPathDelimiter)(json) {
                 return enumValues
             }
-            throw ParseError.missingField(key, json)
+            throw JParseError.missingField(key, json)
         }
     }
     
@@ -323,12 +364,12 @@ public struct Decoder {
                 return nil
             }
             guard let rawValues = values as? [T.RawValue] else {
-                throw ParseError.incorrectType(key, json, Array<T.RawValue>.self)
+                throw JParseError.incorrectType(key, json, Array<T.RawValue>.self)
             }
             var enumValues:[T] = []
             for rawValue in rawValues {
                 guard let enumValue = T(rawValue: rawValue) else {
-                    throw ParseError.badValue(key, rawValue)
+                    throw JParseError.badValue(key, rawValue)
                 }
                 enumValues.append(enumValue)
             }
@@ -351,7 +392,7 @@ public struct Decoder {
                 return number
             }
             
-            throw ParseError.missingField(key, json)
+            throw JParseError.missingField(key, json)
         }
     }
     
@@ -362,7 +403,7 @@ public struct Decoder {
                 return nil
             }
             guard let number = value as? NSNumber else {
-                throw ParseError.incorrectType(key, json, NSNumber.self)
+                throw JParseError.incorrectType(key, json, NSNumber.self)
             }
             return number.int32Value
         }
@@ -383,7 +424,7 @@ public struct Decoder {
                 return numbers
             }
             
-            throw ParseError.missingField(key, json)
+            throw JParseError.missingField(key, json)
         }
     }
     
@@ -394,7 +435,7 @@ public struct Decoder {
                 return nil
             }
             guard let numbers = value as? [NSNumber] else {
-                throw ParseError.incorrectType(key, json, [NSNumber].self)
+                throw JParseError.incorrectType(key, json, [NSNumber].self)
             }
             return numbers.map { $0.int32Value }
         }
@@ -415,7 +456,7 @@ public struct Decoder {
 				return number
 			}
 
-			throw ParseError.missingField(key, json)
+			throw JParseError.missingField(key, json)
 		}
 	}
     
@@ -426,7 +467,7 @@ public struct Decoder {
                 return nil
             }
             guard let number = value as? NSNumber else {
-                throw ParseError.incorrectType(key, json, NSNumber.self)
+                throw JParseError.incorrectType(key, json, NSNumber.self)
             }
             return number.uint32Value
         }
@@ -447,7 +488,7 @@ public struct Decoder {
 				return numbers
 			}
 
-			throw ParseError.missingField(key, json)
+			throw JParseError.missingField(key, json)
 		}
 	}
     
@@ -458,7 +499,7 @@ public struct Decoder {
                 return nil
             }
             guard let numbers = value as? [NSNumber] else {
-                throw ParseError.incorrectType(key, json, [NSNumber].self)
+                throw JParseError.incorrectType(key, json, [NSNumber].self)
             }
             return numbers.map { $0.uint32Value }
         }
@@ -479,7 +520,7 @@ public struct Decoder {
                 return number
             }
             
-            throw ParseError.missingField(key, json)
+            throw JParseError.missingField(key, json)
         }
     }
     
@@ -490,7 +531,7 @@ public struct Decoder {
                 return nil
             }
             guard let number = value as? NSNumber else {
-                throw ParseError.incorrectType(key, json, NSNumber.self)
+                throw JParseError.incorrectType(key, json, NSNumber.self)
             }
             return number.int64Value
         }
@@ -511,7 +552,7 @@ public struct Decoder {
                 return numbers
             }
             
-            throw ParseError.missingField(key, json)
+            throw JParseError.missingField(key, json)
         }
     }
     
@@ -522,7 +563,7 @@ public struct Decoder {
                 return nil
             }
             guard let numbers = value as? [NSNumber] else {
-                throw ParseError.incorrectType(key, json, [NSNumber].self)
+                throw JParseError.incorrectType(key, json, [NSNumber].self)
             }
             return numbers.map { $0.int64Value }
         }
@@ -543,7 +584,7 @@ public struct Decoder {
 				return number
 			}
 
-			throw ParseError.missingField(key, json)
+			throw JParseError.missingField(key, json)
 		}
 	}
     
@@ -554,7 +595,7 @@ public struct Decoder {
                 return nil
             }
             guard let number = value as? NSNumber else {
-                throw ParseError.incorrectType(key, json, NSNumber.self)
+                throw JParseError.incorrectType(key, json, NSNumber.self)
             }
             return number.uint64Value
         }
@@ -575,7 +616,7 @@ public struct Decoder {
                 return numbers
             }
             
-            throw ParseError.missingField(key, json)
+            throw JParseError.missingField(key, json)
         }
     }
     public static func decodeOptional(uint64ArrayForKey key: String, keyPathDelimiter: String = GlossKeyPathDelimiter) -> (JSON) throws -> [UInt64]? {
@@ -585,7 +626,7 @@ public struct Decoder {
                 return nil
             }
             guard let numbers = value as? [NSNumber] else {
-                throw ParseError.incorrectType(key, json, [NSNumber].self)
+                throw JParseError.incorrectType(key, json, [NSNumber].self)
             }
             return numbers.map { $0.uint64Value }
         }
@@ -606,7 +647,7 @@ public struct Decoder {
                 return url
             }
             
-            throw ParseError.missingField(key, json)
+            throw JParseError.missingField(key, json)
         }
     }
     
@@ -617,10 +658,10 @@ public struct Decoder {
                 return nil
             }
             guard let string = value as? String else {
-                throw ParseError.incorrectType(key, json, String.self)
+                throw JParseError.incorrectType(key, json, String.self)
             }
             guard let url = URL(string:string) else {
-                throw ParseError.badValue(key, json)
+                throw JParseError.badValue(key, json)
             }
             return url
         }
@@ -641,7 +682,7 @@ public struct Decoder {
                 return urls
             }
             
-            throw ParseError.missingField(key, json)
+            throw JParseError.missingField(key, json)
         }
     }
     
@@ -652,13 +693,13 @@ public struct Decoder {
                 return nil
             }
             guard let strings = value as? [String] else {
-                throw ParseError.incorrectType(key, json, [String].self)
+                throw JParseError.incorrectType(key, json, [String].self)
             }
             var urls: [URL] = []
             
             for urlString in strings {
                 guard let url = URL(string: urlString) else {
-                    throw ParseError.badValue(key, json)
+                    throw JParseError.badValue(key, json)
                 }
                 
                 urls.append(url)
@@ -683,7 +724,7 @@ public struct Decoder {
                 return uuid
             }
             
-            throw ParseError.missingField(key, json)
+            throw JParseError.missingField(key, json)
         }
     }
     
@@ -694,10 +735,10 @@ public struct Decoder {
                 return nil
             }
             guard let string = value as? String else {
-                throw ParseError.incorrectType(key, json, String.self)
+                throw JParseError.incorrectType(key, json, String.self)
             }
             guard let uuid = UUID(uuidString:string) else {
-                throw ParseError.badValue(key, json)
+                throw JParseError.badValue(key, json)
             }
             return uuid
         }
@@ -718,7 +759,7 @@ public struct Decoder {
                 return urls
             }
             
-            throw ParseError.missingField(key, json)
+            throw JParseError.missingField(key, json)
         }
     }
     public static func decodeOptional(uuidArrayForKey key: String, keyPathDelimiter: String = GlossKeyPathDelimiter) -> (JSON) throws -> [UUID]? {
@@ -728,13 +769,13 @@ public struct Decoder {
                 return nil
             }
             guard let strings = value as? [String] else {
-                throw ParseError.incorrectType(key, json, [String].self)
+                throw JParseError.incorrectType(key, json, [String].self)
             }
             var urls: [UUID] = []
             
             for urlString in strings {
                 guard let url = UUID(uuidString: urlString) else {
-                    throw ParseError.badValue(key, json)
+                    throw JParseError.badValue(key, json)
                 }
                 
                 urls.append(url)
@@ -759,7 +800,7 @@ public struct Decoder {
                 return number
             }
             
-            throw ParseError.missingField(key, json)
+            throw JParseError.missingField(key, json)
         }
     }
     
@@ -770,7 +811,7 @@ public struct Decoder {
                 return nil
             }
             guard let number = value as? NSNumber else {
-                throw ParseError.incorrectType(key, json, NSNumber.self)
+                throw JParseError.incorrectType(key, json, NSNumber.self)
             }
             return number.decimalValue
         }
@@ -791,7 +832,7 @@ public struct Decoder {
                 return numbers
             }
             
-            throw ParseError.missingField(key, json)
+            throw JParseError.missingField(key, json)
         }
     }
     public static func decodeOptional(decimalArrayForKey key: String, keyPathDelimiter: String = GlossKeyPathDelimiter) -> (JSON) throws -> [Decimal]? {
@@ -801,7 +842,7 @@ public struct Decoder {
                 return nil
             }
             guard let numbers = value as? [NSNumber] else {
-                throw ParseError.incorrectType(key, json, [NSNumber].self)
+                throw JParseError.incorrectType(key, json, [NSNumber].self)
             }
             return numbers.map { $0.decimalValue }
         }
