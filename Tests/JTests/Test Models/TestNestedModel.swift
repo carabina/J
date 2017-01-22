@@ -26,7 +26,7 @@
 import Foundation
 import J
 
-struct TestNestedModel: JModel {
+struct TestNestedModel: JsonModel {
     
     let id: Int
     let name: String

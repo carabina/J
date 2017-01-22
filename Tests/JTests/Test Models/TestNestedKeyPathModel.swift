@@ -9,7 +9,7 @@
 import Foundation
 import J
 
-struct TestNestedKeyPathModel: JModel {
+struct TestNestedKeyPathModel: JsonModel {
     
     let keyPathModel: TestKeyPathModel?
     let flag: Bool

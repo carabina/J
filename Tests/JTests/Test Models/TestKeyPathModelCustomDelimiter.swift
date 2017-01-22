@@ -9,7 +9,7 @@
 import Foundation
 import J
 
-struct TestKeyPathModelCustomDelimiter: JModel {
+struct TestKeyPathModelCustomDelimiter: JsonModel {
     
     let id: Int?
     let url: URL?

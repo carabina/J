@@ -9,7 +9,7 @@
 import Foundation
 import J
 
-struct TestKeyPathModel: JModel {
+struct TestKeyPathModel: JsonModel {
     
     let id: Int
     let name: String

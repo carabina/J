@@ -68,7 +68,7 @@ public protocol Encodable {
     
 }
 
-public protocol JModel : Decodable, Encodable {}
+public protocol JsonModel : Decodable, Encodable {}
 
 // MARK: - Global
 

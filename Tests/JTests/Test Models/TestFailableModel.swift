@@ -25,7 +25,7 @@
 
 import J
 
-struct TestFailableModel: JModel {
+struct TestFailableModel: JsonModel {
     
     let identifier: String
     let value: Int

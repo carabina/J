@@ -26,7 +26,7 @@
 import Foundation
 import J
 
-struct TestModel: JModel {
+struct TestModel: JsonModel {
     
     let bool: Bool
     let boolArray: [Bool]?
