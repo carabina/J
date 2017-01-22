@@ -49,8 +49,8 @@ class KeyPathTests: XCTestCase {
     override func setUp() {
         super.setUp()
         
-        nestedKeyPathModel = TestNestedKeyPathModel(json: nestedKeyPathJSON)
-        keyPathModelWithCustomDelimiter = TestKeyPathModelCustomDelimiter(json: keyPathJSONWithCustomDelimiter)
+        nestedKeyPathModel = try! TestNestedKeyPathModel(json: nestedKeyPathJSON)
+        keyPathModelWithCustomDelimiter = try! TestKeyPathModelCustomDelimiter(json: keyPathJSONWithCustomDelimiter)
     }
     
     override func tearDown() {
@@ -63,7 +63,7 @@ class KeyPathTests: XCTestCase {
     func testNestedKeyPathFromJSON() {
         XCTAssertTrue(nestedKeyPathModel.keyPathModel?.id == 1, "Should decode with nested key path")
         XCTAssertTrue(nestedKeyPathModel.keyPathModel?.name == "foo", "Should decode with nested key path")
-        XCTAssertTrue(nestedKeyPathModel.keyPathModel?.url?.absoluteString == "http://url.com", "Should decode with nested key path")
+        XCTAssertTrue(nestedKeyPathModel.keyPathModel?.url.absoluteString == "http://url.com", "Should decode with nested key path")
         XCTAssertTrue(nestedKeyPathModel.flag == true, "Should decode with nested key path")
     }
     
@@ -80,7 +80,7 @@ class KeyPathTests: XCTestCase {
     func testNonDefaultKeyPathEncode() {
         let result = keyPathModelWithCustomDelimiter.toJSON()
         
-        let nested = result!["nested"] as! JSON
+        let nested = result["nested"] as! JSON
         let id = nested["id"] as! Int
         let url = nested["url"] as! String
         

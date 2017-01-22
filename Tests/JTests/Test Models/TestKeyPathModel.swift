@@ -16,9 +16,9 @@ struct TestKeyPathModel: JModel {
     let url: URL
     
     init(json: JSON) throws {
-        self.id = "id" <~~ json
-        self.name = "args.name" <~~ json
-        self.url = "args.url" <~~ json
+        self.id = try "id" <~~ json
+        self.name = try "args.name" <~~ json
+        self.url = try "args.url" <~~ json
     }
     
     func toJSON() -> JSON {
