@@ -21,8 +21,8 @@ struct TestNestedKeyPathModel: JsonModel {
     
     func toJSON() -> JSON {
         return jsonify([
-            "keyPath" ~~> self.keyPathModel,
-            "keyPath.args.flag" ~~> self.flag
+            self.keyPathModel ~~> "keyPath",
+            self.flag ~~> "keyPath.args.flag"
             ])
     }
     

@@ -46,10 +46,10 @@ struct TestNestedModel: JsonModel {
     
     func toJSON() -> JSON {
         return jsonify([
-            "id" ~~> self.id,
-            "name" ~~> self.name,
-            "uuid" ~~> self.uuid,
-            "url" ~~> self.url
+            self.id ~~> "id",
+            self.name ~~> "name",
+            self.uuid ~~> "uuid",
+            self.url ~~> "url"
             ])
     }
     

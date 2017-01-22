@@ -1,6 +1,6 @@
 Pod::Spec.new do |s|
   s.name             = "J"
-  s.version          = "0.5.1"
+  s.version          = "0.5.3"
   s.summary          = "A shinier JSON parsing library in Swift"
   s.description      = "A shiny JSON parsing library in Swift. Features include mapping JSON to objects, mapping objects to JSON, handling of nested objects and custom transformations."
   s.homepage         = "https://github.com/arkverse/J"

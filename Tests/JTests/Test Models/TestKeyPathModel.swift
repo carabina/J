@@ -23,9 +23,9 @@ struct TestKeyPathModel: JsonModel {
     
     func toJSON() -> JSON {
         return jsonify([
-            "id" ~~> self.id,
-            "args.name" ~~> self.name,
-            "args.url" ~~> self.url
+            self.id  ~~> "id",
+            self.name ~~> "args.name",
+            self.url ~~> "args.url"
             ])
     }
     

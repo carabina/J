@@ -21,8 +21,8 @@ struct TestKeyPathModelCustomDelimiter: JsonModel {
     
     func toJSON() -> JSON {
         return jsonify([
-            "nested*id" ~~> self.id,
-            "nested*url" ~~> self.url
+            self.id ~~> "nested*id",
+            self.url ~~> "nested*url"
             ], keyPathDelimiter: "*")
     }
     

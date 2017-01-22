@@ -289,11 +289,11 @@ infix operator ~~? : EncodingPrecedence
  
  - returns: JSON when successful, nil otherwise.
  */
-public func ~~> <T>(key: String, property: T) -> JSON {
+public func ~~> <T>(property: T, key: String) -> JSON {
     return Encoder.encode(key: key)(property)
 }
 
-public func ~~? <T>(key: String, property: T?) -> JSON? {
+public func ~~? <T>(property: T?, key: String) -> JSON? {
     return Encoder.encodeOptional(key: key)(property)
 }
 
@@ -305,10 +305,10 @@ public func ~~? <T>(key: String, property: T?) -> JSON? {
  
  - returns: JSON when successful, nil otherwise.
  */
-public func ~~> <T>(key: String, property: [T]) -> JSON {
+public func ~~> <T>(property: [T], key: String) -> JSON {
     return Encoder.encode(arrayForKey: key)(property)
 }
-public func ~~? <T>(key: String, property: [T]?) -> JSON? {
+public func ~~? <T>(property: [T]?, key: String) -> JSON? {
     return Encoder.encodeOptional(arrayForKey: key)(property)
 }
 
@@ -320,10 +320,10 @@ public func ~~? <T>(key: String, property: [T]?) -> JSON? {
  
  - returns: JSON when successful, nil otherwise.
  */
-public func ~~> <T: Encodable>(key: String, property: T) -> JSON {
+public func ~~> <T: Encodable>(property: T, key: String) -> JSON {
     return Encoder.encode(encodableForKey: key)(property)
 }
-public func ~~? <T: Encodable>(key: String, property: T?) -> JSON? {
+public func ~~? <T: Encodable>(property: T?, key: String) -> JSON? {
     return Encoder.encodeOptional(encodableForKey: key)(property)
 }
 
@@ -335,10 +335,10 @@ public func ~~? <T: Encodable>(key: String, property: T?) -> JSON? {
  
  - returns: JSON when successful, nil otherwise.
  */
-public func ~~> <T: Encodable>(key: String, property: [T]) -> JSON {
+public func ~~> <T: Encodable>(property: [T], key: String) -> JSON {
     return Encoder.encode(encodableArrayForKey: key)(property)
 }
-public func ~~? <T: Encodable>(key: String, property: [T]?) -> JSON? {
+public func ~~? <T: Encodable>(property: [T]?, key: String) -> JSON? {
     return Encoder.encodeOptional(encodableArrayForKey: key)(property)
 }
 
@@ -350,10 +350,10 @@ public func ~~? <T: Encodable>(key: String, property: [T]?) -> JSON? {
  
  - returns: JSON when successful, nil otherwise.
  */
-public func ~~> <T: Encodable>(key: String, property: [String : T]) -> JSON {
+public func ~~> <T: Encodable>(property: [String : T], key: String) -> JSON {
     return Encoder.encode(encodableDictionaryForKey: key)(property)
 }
-public func ~~? <T: Encodable>(key: String, property: [String : T]?) -> JSON? {
+public func ~~? <T: Encodable>(property: [String : T]?, key: String) -> JSON? {
     return Encoder.encodeOptional(encodableDictionaryForKey: key)(property)
 }
 
@@ -365,10 +365,10 @@ public func ~~? <T: Encodable>(key: String, property: [String : T]?) -> JSON? {
  
  - returns: JSON when successful, nil otherwise.
  */
-public func ~~> <T: Encodable>(key: String, property: [String : [T]]) -> JSON {
+public func ~~> <T: Encodable>(property: [String : [T]], key: String) -> JSON {
     return Encoder.encode(encodableDictionaryForKey: key)(property)
 }
-public func ~~? <T: Encodable>(key: String, property: [String : [T]]?) -> JSON? {
+public func ~~? <T: Encodable>(property: [String : [T]]?, key: String) -> JSON? {
     return Encoder.encodeOptional(encodableDictionaryForKey: key)(property)
 }
 
@@ -380,10 +380,10 @@ public func ~~? <T: Encodable>(key: String, property: [String : [T]]?) -> JSON? 
  
  - returns: JSON when successful, nil otherwise.
  */
-public func ~~> <T: RawRepresentable>(key: String, property: T) -> JSON {
+public func ~~> <T: RawRepresentable>(property: T, key: String) -> JSON {
     return Encoder.encode(enumForKey: key)(property)
 }
-public func ~~? <T: RawRepresentable>(key: String, property: T?) -> JSON? {
+public func ~~? <T: RawRepresentable>(property: T?, key: String) -> JSON? {
     return Encoder.encodeOptional(enumForKey: key)(property)
 }
 
@@ -395,10 +395,10 @@ public func ~~? <T: RawRepresentable>(key: String, property: T?) -> JSON? {
  
  - returns: JSON when successful, nil otherwise.
  */
-public func ~~> <T: RawRepresentable>(key: String, property: [T]) -> JSON {
+public func ~~> <T: RawRepresentable>(property: [T], key: String) -> JSON {
     return Encoder.encode(enumArrayForKey: key)(property)
 }
-public func ~~? <T: RawRepresentable>(key: String, property: [T]?) -> JSON? {
+public func ~~? <T: RawRepresentable>(property: [T]?, key: String) -> JSON? {
     return Encoder.encodeOptional(enumArrayForKey: key)(property)
 }
 
@@ -410,10 +410,10 @@ public func ~~? <T: RawRepresentable>(key: String, property: [T]?) -> JSON? {
  
  - returns: JSON when successful, nil otherwise.
  */
-public func ~~> (key: String, property: Int32) -> JSON {
+public func ~~> (property: Int32, key: String) -> JSON {
     return Encoder.encode(int32ForKey: key)(property)
 }
-public func ~~? (key: String, property: Int32?) -> JSON? {
+public func ~~? (property: Int32?, key: String) -> JSON? {
     return Encoder.encodeOptional(int32ForKey: key)(property)
 }
 
@@ -425,10 +425,10 @@ public func ~~? (key: String, property: Int32?) -> JSON? {
  
  - returns: JSON when successful, nil otherwise.
  */
-public func ~~> (key: String, property: [Int32]) -> JSON {
+public func ~~> (property: [Int32], key: String) -> JSON {
     return Encoder.encode(int32ArrayForKey: key)(property)
 }
-public func ~~? (key: String, property: [Int32]?) -> JSON? {
+public func ~~? (property: [Int32]?, key: String) -> JSON? {
     return Encoder.encodeOptional(int32ArrayForKey: key)(property)
 }
 
@@ -440,10 +440,10 @@ public func ~~? (key: String, property: [Int32]?) -> JSON? {
  
  - returns: JSON when successful, nil otherwise.
  */
-public func ~~> (key: String, property: UInt32) -> JSON {
+public func ~~> (property: UInt32, key: String) -> JSON {
     return Encoder.encode(uint32ForKey: key)(property)
 }
-public func ~~? (key: String, property: UInt32?) -> JSON? {
+public func ~~? (property: UInt32?, key: String) -> JSON? {
     return Encoder.encodeOptional(uint32ForKey: key)(property)
 }
 
@@ -455,10 +455,10 @@ public func ~~? (key: String, property: UInt32?) -> JSON? {
  
  - returns: JSON when successful, nil otherwise.
  */
-public func ~~> (key: String, property: [UInt32]) -> JSON {
+public func ~~> (property: [UInt32], key: String) -> JSON {
     return Encoder.encode(uint32ArrayForKey: key)(property)
 }
-public func ~~? (key: String, property: [UInt32]?) -> JSON? {
+public func ~~? (property: [UInt32]?, key: String) -> JSON? {
     return Encoder.encodeOptional(uint32ArrayForKey: key)(property)
 }
 
@@ -470,10 +470,10 @@ public func ~~? (key: String, property: [UInt32]?) -> JSON? {
  
  - returns: JSON when successful, nil otherwise.
  */
-public func ~~> (key: String, property: Int64) -> JSON {
+public func ~~> (property: Int64, key: String) -> JSON {
     return Encoder.encode(int64ForKey: key)(property)
 }
-public func ~~? (key: String, property: Int64?) -> JSON? {
+public func ~~? (property: Int64?, key: String) -> JSON? {
     return Encoder.encodeOptional(int64ForKey: key)(property)
 }
 
@@ -485,10 +485,10 @@ public func ~~? (key: String, property: Int64?) -> JSON? {
  
  - returns: JSON when successful, nil otherwise.
  */
-public func ~~> (key: String, property: [Int64]) -> JSON {
+public func ~~> (property: [Int64], key: String) -> JSON {
     return Encoder.encode(int64ArrayForKey: key)(property)
 }
-public func ~~? (key: String, property: [Int64]?) -> JSON? {
+public func ~~? (property: [Int64]?, key: String) -> JSON? {
     return Encoder.encodeOptional(int64ArrayForKey: key)(property)
 }
 
@@ -500,10 +500,10 @@ public func ~~? (key: String, property: [Int64]?) -> JSON? {
  
  - returns: JSON when successful, nil otherwise.
  */
-public func ~~> (key: String, property: UInt64) -> JSON {
+public func ~~> (property: UInt64, key: String) -> JSON {
     return Encoder.encode(uint64ForKey: key)(property)
 }
-public func ~~? (key: String, property: UInt64?) -> JSON? {
+public func ~~? (property: UInt64?, key: String) -> JSON? {
     return Encoder.encodeOptional(uint64ForKey: key)(property)
 }
 
@@ -515,10 +515,10 @@ public func ~~? (key: String, property: UInt64?) -> JSON? {
  
  - returns: JSON when successful, nil otherwise.
  */
-public func ~~> (key: String, property: [UInt64]) -> JSON {
+public func ~~> (property: [UInt64], key: String) -> JSON {
     return Encoder.encode(uint64ArrayForKey: key)(property)
 }
-public func ~~? (key: String, property: [UInt64]?) -> JSON? {
+public func ~~? (property: [UInt64]?, key: String) -> JSON? {
     return Encoder.encodeOptional(uint64ArrayForKey: key)(property)
 }
 
@@ -530,10 +530,10 @@ public func ~~? (key: String, property: [UInt64]?) -> JSON? {
  
  - returns: JSON when successful, nil otherwise.
  */
-public func ~~> (key: String, property: URL) -> JSON {
+public func ~~> (property: URL, key: String) -> JSON {
     return Encoder.encode(urlForKey: key)(property)
 }
-public func ~~? (key: String, property: URL?) -> JSON? {
+public func ~~? (property: URL?, key: String) -> JSON? {
     return Encoder.encodeOptional(urlForKey: key)(property)
 }
 
@@ -545,10 +545,10 @@ public func ~~? (key: String, property: URL?) -> JSON? {
  
  - returns: JSON when successful, nil otherwise.
  */
-public func ~~> (key: String, property: UUID) -> JSON {
+public func ~~> (property: UUID, key: String) -> JSON {
     return Encoder.encode(uuidForKey: key)(property)
 }
-public func ~~? (key: String, property: UUID?) -> JSON? {
+public func ~~? (property: UUID?, key: String) -> JSON? {
     return Encoder.encodeOptional(uuidForKey: key)(property)
 }
 
@@ -560,10 +560,10 @@ public func ~~? (key: String, property: UUID?) -> JSON? {
  
  - returns: JSON when successful, nil otherwise.
  */
-public func ~~> (key: String, property: Decimal) -> JSON {
+public func ~~> (property: Decimal, key: String) -> JSON {
     return Encoder.encode(decimalForKey: key)(property)
 }
-public func ~~? (key: String, property: Decimal?) -> JSON? {
+public func ~~? (property: Decimal?, key: String) -> JSON? {
     return Encoder.encodeOptional(decimalForKey: key)(property)
 }
 
@@ -575,9 +575,9 @@ public func ~~? (key: String, property: Decimal?) -> JSON? {
  
  - returns: JSON when successful, nil otherwise.
  */
-public func ~~> (key: String, property: [Decimal]) -> JSON {
+public func ~~> (property: [Decimal], key: String) -> JSON {
     return Encoder.encode(decimalArrayForKey: key)(property)
 }
-public func ~~? (key: String, property: [Decimal]?) -> JSON? {
+public func ~~? (property: [Decimal]?, key: String) -> JSON? {
     return Encoder.encodeOptional(decimalArrayForKey: key)(property)
 }
