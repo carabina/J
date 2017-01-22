@@ -10,6 +10,6 @@ import Foundation
 
 enum ParseError:Error {
     case missingField(String, JSON)
-    case incorrectType(String, JSON, Any.Type)
+    case incorrectType(String, Any, Any.Type)
     case badValue(String, Any)
 }

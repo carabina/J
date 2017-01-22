@@ -15,9 +15,23 @@
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "DC39BF601B8A7AD200088CE0"
-               BuildableName = "Gloss.framework"
-               BlueprintName = "Gloss"
-               ReferencedContainer = "container:Gloss.xcodeproj">
+               BuildableName = "J.framework"
+               BlueprintName = "J"
+               ReferencedContainer = "container:J.xcodeproj">
+            </BuildableReference>
+         </BuildActionEntry>
+         <BuildActionEntry
+            buildForTesting = "YES"
+            buildForRunning = "NO"
+            buildForProfiling = "NO"
+            buildForArchiving = "NO"
+            buildForAnalyzing = "NO">
+            <BuildableReference
+               BuildableIdentifier = "primary"
+               BlueprintIdentifier = "2FA4CE991C947E3000EB8AB8"
+               BuildableName = "JTests.xctest"
+               BlueprintName = "JTests"
+               ReferencedContainer = "container:J.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
       </BuildActionEntries>
@@ -28,16 +42,6 @@
       selectedLauncherIdentifier = "Xcode.DebuggerFoundation.Launcher.LLDB"
       shouldUseLaunchSchemeArgsEnv = "YES">
       <Testables>
-         <TestableReference
-            skipped = "NO">
-            <BuildableReference
-               BuildableIdentifier = "primary"
-               BlueprintIdentifier = "2FA4CE991C947E3000EB8AB8"
-               BuildableName = "GlossTests.xctest"
-               BlueprintName = "GlossTests"
-               ReferencedContainer = "container:Gloss.xcodeproj">
-            </BuildableReference>
-         </TestableReference>
       </Testables>
       <MacroExpansion>
          <BuildableReference
@@ -61,15 +65,6 @@
       debugDocumentVersioning = "YES"
       debugServiceExtension = "internal"
       allowLocationSimulation = "YES">
-      <MacroExpansion>
-         <BuildableReference
-            BuildableIdentifier = "primary"
-            BlueprintIdentifier = "DC39BF601B8A7AD200088CE0"
-            BuildableName = "Gloss.framework"
-            BlueprintName = "Gloss"
-            ReferencedContainer = "container:Gloss.xcodeproj">
-         </BuildableReference>
-      </MacroExpansion>
       <AdditionalOptions>
       </AdditionalOptions>
    </LaunchAction>
@@ -79,15 +74,6 @@
       savedToolIdentifier = ""
       useCustomWorkingDirectory = "NO"
       debugDocumentVersioning = "YES">
-      <MacroExpansion>
-         <BuildableReference
-            BuildableIdentifier = "primary"
-            BlueprintIdentifier = "DC39BF601B8A7AD200088CE0"
-            BuildableName = "Gloss.framework"
-            BlueprintName = "Gloss"
-            ReferencedContainer = "container:Gloss.xcodeproj">
-         </BuildableReference>
-      </MacroExpansion>
    </ProfileAction>
    <AnalyzeAction
       buildConfiguration = "Debug">

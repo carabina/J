@@ -35,13 +35,9 @@ public extension Decodable {
      
      - returns: Object or nil.
      */
-    init?(data: Data, serializer: JSONSerializer = GlossJSONSerializer(), options: JSONSerialization.ReadingOptions = .mutableContainers) {
-        if let json = serializer.json(from: data, options: options) {
-            self.init(json: json)
-            return
-        }
-        
-        return nil
+    init(data: Data, serializer: JSONSerializer = JJSONSerializer(), options: JSONSerialization.ReadingOptions = .mutableContainers) throws {
+        let json = try serializer.json(from: data, options: options)
+        try self.init(json: json)
     }
     
 }

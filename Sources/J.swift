@@ -108,7 +108,7 @@ public protocol JSONSerializer {
      
      - returns: JSON if created successfully, nil otherwise.
      */
-    func json(from data: Data, options: JSONSerialization.ReadingOptions) -> JSON?
+    func json(from data: Data, options: JSONSerialization.ReadingOptions) throws -> JSON
     
     /**
      Creates JSON array from provided data.
@@ -118,26 +118,27 @@ public protocol JSONSerializer {
      
      - returns: JSON array if created successfully, nil otherwise.
      */
-    func jsonArray(from data: Data, options: JSONSerialization.ReadingOptions) -> [JSON]?
+    func jsonArray(from data: Data, options: JSONSerialization.ReadingOptions) throws -> [JSON]
     
 }
 
 /// Gloss JSON Serializer.
-public struct GlossJSONSerializer: JSONSerializer {
+public struct JJSONSerializer: JSONSerializer {
 
-    public func json(from data: Data, options: JSONSerialization.ReadingOptions) -> JSON? {
-        guard let json = (try? JSONSerialization.jsonObject(with: data, options: options)) as? JSON else {
-            return nil
+    public func json(from data: Data, options: JSONSerialization.ReadingOptions) throws -> JSON {
+        let value = try JSONSerialization.jsonObject(with: data, options: options)
+        guard let json = value as? JSON else {
+            throw ParseError.incorrectType("", value, JSON.self)
         }
         
         return json
     }
     
-    public func jsonArray(from data: Data, options: JSONSerialization.ReadingOptions) -> [JSON]? {
-        guard let jsonArray = (try? JSONSerialization.jsonObject(with: data, options: options)) as? [JSON] else {
-            return nil
+    public func jsonArray(from data: Data, options: JSONSerialization.ReadingOptions) throws -> [JSON] {
+        let value = try JSONSerialization.jsonObject(with: data, options: options)
+        guard let jsonArray = value as? [JSON] else {
+            throw ParseError.incorrectType("", value, [JSON].self)
         }
-        
         return jsonArray
     }
 
@@ -163,14 +164,12 @@ public private(set) var GlossKeyPathDelimiter: String = {
  
  - returns: JSON when successful, nil otherwise.
  */
-public func jsonify(_ array: [JSON], keyPathDelimiter: String = GlossKeyPathDelimiter) -> JSON? {
+public func jsonify(_ array: [JSON], keyPathDelimiter: String = GlossKeyPathDelimiter) -> JSON {
     var json: JSON = [:]
     
     for j in array {
-        if(j != nil) {
-            for (key,value) in j! {
-                setValue(inJSON: &json, value: value, forKeyPath: key, withDelimiter: keyPathDelimiter)
-            }
+        for (key,value) in j {
+            setValue(inJSON: &json, value: value, forKeyPath: key, withDelimiter: keyPathDelimiter)
         }
     }
     

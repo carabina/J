@@ -39,17 +39,12 @@ public extension Array where Element: Decodable {
      
      - returns: Array of objects created from JSON.
      */
-    static func from(jsonArray: [JSON]) -> [Element]? {
+    static func from(jsonArray: [JSON]) throws -> [Element] {
         var models: [Element] = []
         
         for json in jsonArray {
-            let model = Element(json: json)
-            
-            if let model = model {
-                models.append(model)
-            } else {
-                return nil
-            }
+            let model = try Element(json: json)
+            models.append(model)
         }
         
         return models
@@ -73,12 +68,13 @@ public extension Array where Element: Decodable {
      
      - returns: Object or nil.
      */
-    static func from(data: Data, serializer: JSONSerializer = GlossJSONSerializer(), options: JSONSerialization.ReadingOptions = .mutableContainers) -> [Element]? {
-        guard
-            let jsonArray = (try? JSONSerialization.jsonObject(with: data, options: .mutableContainers)) as? [JSON],
-            let models = [Element].from(jsonArray: jsonArray) else {
-                return nil
+    static func from(data: Data, serializer: JSONSerializer = JJSONSerializer(), options: JSONSerialization.ReadingOptions = .mutableContainers) throws -> [Element] {
+        let jsonValues = try JSONSerialization.jsonObject(with: data, options: .mutableContainers)
+        guard let jsonArray = jsonValues as? [JSON] else {
+            throw ParseError.incorrectType("", jsonValues, [JSON].self)
         }
+            
+        let models = try [Element].from(jsonArray: jsonArray)
         
         return models
     }
@@ -97,15 +93,11 @@ public extension Array where Element: Encodable {
      
      - returns: Array of JSON created from objects.
      */
-    func toJSONArray() -> [JSON]? {
+    func toJSONArray() -> [JSON] {
         var jsonArray: [JSON] = []
         
         for json in self {
-            if let json = json.toJSON() {
-                jsonArray.append(json)
-            } else {
-                return nil
-            }
+            jsonArray.append(json.toJSON())
         }
         
         return jsonArray
