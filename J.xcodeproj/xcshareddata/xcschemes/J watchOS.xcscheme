@@ -15,7 +15,7 @@
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "DC683ADA1C2C615D0035EAC3"
-               BuildableName = "Gloss.framework"
+               BuildableName = "J.framework"
                BlueprintName = "J watchOS"
                ReferencedContainer = "container:J.xcodeproj">
             </BuildableReference>
@@ -46,7 +46,7 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "DC683ADA1C2C615D0035EAC3"
-            BuildableName = "Gloss.framework"
+            BuildableName = "J.framework"
             BlueprintName = "J watchOS"
             ReferencedContainer = "container:J.xcodeproj">
          </BuildableReference>
@@ -64,7 +64,7 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "DC683ADA1C2C615D0035EAC3"
-            BuildableName = "Gloss.framework"
+            BuildableName = "J.framework"
             BlueprintName = "J watchOS"
             ReferencedContainer = "container:J.xcodeproj">
          </BuildableReference>
