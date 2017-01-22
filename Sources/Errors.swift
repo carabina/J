@@ -8,10 +8,25 @@
 
 import Foundation
 
-public enum JParseError:Error, Equatable {
+public enum JParseError:Error, Equatable, CustomStringConvertible, CustomDebugStringConvertible {
     case missingField(String, JSON)
     case incorrectType(String, Any, Any.Type)
     case badValue(String, Any)
+    
+    public var description: String {
+        switch self {
+        case let .missingField(string, json):
+            return "Field \(string) not found in json: \(json)"
+        case let .incorrectType(string, any, json):
+            return "Field \(string) has incorrect type. Expected \(any) for key \(string) in json: \(json)"
+        case let .badValue(string, any):
+            return "Field \(string) had an inconvertible value (couldnt parse Date, Enum, UUID... etc) from json: \(any)"
+        }
+    }
+    
+    public var debugDescription: String {
+        return self.description
+    }
 }
 
 public func == (e1:JParseError, e2:JParseError) -> Bool {
